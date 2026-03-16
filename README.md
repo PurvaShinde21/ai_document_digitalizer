@@ -59,20 +59,6 @@ cp .env.example .env
 docker-compose up --build
 ```
 
-## Development Phases
-
-| Phase | Description | Status |
-|---|---|---|
-| 1 | Project scaffold & Git setup | ✅ Complete |
-| 2 | FastAPI backend | 🔲 Pending |
-| 3 | ML worker & OCR pipeline | 🔲 Pending |
-| 4 | Next.js frontend | 🔲 Pending |
-| 5 | Docker & local end-to-end | 🔲 Pending |
-| 6 | Experiments & evaluation | 🔲 Pending |
-| 7 | Tests & CI/CD | 🔲 Pending |
-| 8 | Infrastructure (optional) | 🔲 Pending |
-| 9 | README & docs | 🔲 Pending |
-
 ## License
 
 MIT
