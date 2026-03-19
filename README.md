@@ -1,6 +1,5 @@
 # AI Handwritten Document Digitizer
-
-> Convert handwritten documents into searchable digital text using AI — **100% free to run**.
+> Convert handwritten documents into searchable digital text using AI.
 
 ## Architecture
 
