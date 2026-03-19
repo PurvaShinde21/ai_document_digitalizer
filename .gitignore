@@ -42,29 +42,26 @@ yarn-error.log*
 *.pth
 *.onnx
 
-# HuggingFace cache (can be 1–5 GB)
+# HuggingFace cache (can be 1-5 GB)
 .cache/
-~/.cache/huggingface/
+huggingface/
 
 # ──────────────────────────────────────────────
 # Storage Directories (user uploads & outputs)
 # ──────────────────────────────────────────────
-worker/storage/uploads/
-worker/storage/outputs/
+storage/uploads/
+storage/outputs/
+worker/storage/
 
 # ──────────────────────────────────────────────
-# Data / Datasets
+# Data / Datasets (never commit raw data)
 # ──────────────────────────────────────────────
 data/
 datasets/
+experiments/data/
 *.csv
 *.parquet
 *.jsonl
-
-# ──────────────────────────────────────────────
-# Docker
-# ──────────────────────────────────────────────
-.dockerignore
 
 # ──────────────────────────────────────────────
 # OS / Editor

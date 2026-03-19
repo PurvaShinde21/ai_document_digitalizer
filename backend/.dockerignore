@@ -1,0 +1,30 @@
+# Files and directories to exclude from Docker build context
+
+# Git
+.git/
+.gitignore
+
+# Environment files (never in Docker image)
+.env.local
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Storage (runtime data — mounted as volumes)
+storage/
+
+# Local test outputs
+tests/__pycache__/
+
+# Editor
+.vscode/
+.idea/
+*.swp
