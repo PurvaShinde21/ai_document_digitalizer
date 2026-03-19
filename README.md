@@ -1,63 +1,51 @@
 # AI Handwritten Document Digitizer
 
-> Convert handwritten documents into searchable digital text using AI/ML.
-
-## Overview
-
-This project is a full-stack AI web application that uses **Microsoft TrOCR** (Transformer-based OCR) to recognize handwritten text from uploaded images and PDFs. Users upload a document, the ML pipeline processes it asynchronously, and the result is available for download in **TXT**, **DOCX**, or **PDF** format.
+> Convert handwritten documents into searchable digital text using AI — **100% free to run**.
 
 ## Architecture
 
 ```
-User → Next.js Frontend (Vercel)
-     → FastAPI Backend (Render)
-     → Redis Queue
-     → ML Worker (TrOCR Pipeline)
-     → Output Storage (S3 / Local)
-     → Back to Frontend (Download)
+User → Next.js Frontend (Vercel, free)
+     → FastAPI Backend (Render, 512MB RAM — no model loaded)
+       └── BackgroundTask: HuggingFace Inference API (trocr-small-handwritten)
+     → Upstash Redis (job status, free tier)
+     → Local storage / Cloudflare R2 (file storage)
 ```
-
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Frontend | Next.js (React) |
-| Backend | FastAPI (Python) |
-| ML Model | microsoft/trocr-base-handwritten |
-| Queue | Redis (via RQ) |
-| Storage | Local → AWS S3 / Cloudflare R2 |
-| Deployment | Vercel (frontend) + Render (backend + worker) |
 
 ## Project Structure
 
 ```
 ai-document-digitizer/
-├── frontend/       # Next.js UI
-├── backend/        # FastAPI REST API
-├── worker/         # ML pipeline & Redis worker
-├── experiments/    # Dataset loading & evaluation notebooks
-├── infrastructure/ # Terraform, K8s, Nginx configs
-├── tests/          # pytest test suites
-├── scripts/        # Helper shell/Python scripts
-└── docker-compose.yml
+├── frontend/               # Next.js UI (Vercel)
+│   ├── src/
+│   │   ├── components/     # FileUpload, ProgressBar, DownloadButton
+│   │   ├── pages/          # index.jsx, results/[jobId].jsx
+│   │   └── services/       # api.js (Axios client)
+│   └── package.json
+│
+├── backend/                # FastAPI API (Render)
+│   ├── api/                # upload.py, status.py, download.py
+│   ├── models/             # job_model.py (Pydantic)
+│   ├── services/
+│   │   ├── ocr_service.py  # Full pipeline (replaces worker)
+│   │   ├── queue_service.py
+│   │   └── file_service.py
+│   ├── config.py
+│   ├── main.py
+│   ├── requirements.txt
+│   └── Dockerfile
+│
+├── worker/                 # OCR modules (reference / experiments)
+│   ├── ocr/                # trocr_model.py, preprocessing.py, etc.
+│   └── document/           # txt, docx, pdf generators
+│
+├── experiments/            # Dataset loading & evaluation notebooks
+├── tests/                  # pytest suites
+├── docker-compose.yml      # Dev: backend + redis + frontend
+├── .env.example
+└── README.md
 ```
 
-## Getting Started
-
-> Full setup instructions coming in Phase 5 (Docker + local end-to-end).
-
-```bash
-# 1. Clone the repo
-git clone https://github.com/<your-username>/ai-document-digitizer.git
-cd ai-document-digitizer
-
-# 2. Copy environment variables
-cp .env.example .env
-# Edit .env with your real values
-
-# 3. Start all services
-docker-compose up --build
-```
 
 ## License
 
