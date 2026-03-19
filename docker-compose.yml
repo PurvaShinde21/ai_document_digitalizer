@@ -1,0 +1,56 @@
+version: "3.9"
+
+# ── Simplified Free-Tier Stack ─────────────────────────────────────────────
+# No separate ML worker container.
+# OCR runs inside the FastAPI process via HuggingFace Inference API.
+# Services: backend (FastAPI) + redis (local dev) + frontend (Next.js)
+
+services:
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - UPLOAD_DIR=/app/storage/uploads
+      - OUTPUT_DIR=/app/storage/outputs
+    volumes:
+      - ./storage/uploads:/app/storage/uploads
+      - ./storage/outputs:/app/storage/outputs
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - frontend/.env.local
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+# Shared storage volumes (uploads + outputs accessible to backend)
+volumes:
+  uploads:
+  outputs:
